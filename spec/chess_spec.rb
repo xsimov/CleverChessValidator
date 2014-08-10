@@ -1,43 +1,61 @@
 require_relative '../lib/chess'
 require 'pry'
 
-describe "given a one white pawn world" do
+describe "One piece on the board world: " do
+    
+  before :each do
+    @w_p=Piece.new("wP")
+    @b_p=Piece.new("bP")
+    @b_r = Piece.new("bR")
+    @w_b = Piece.new("wB")
+  end
 
-	before :each do
-		@w_p=ChessMove.new.piece_team("wP")
-	end
+  context "A pawn:" do
+      it "moving more than one tile is illegal" do
+        expect(Move.a(@w_p).from(["a", 1]).to(["a", 4])).to eq("ILLEGAL")
+      end
 
-	it "[a1 a2] is legal" do
-		expect(ChessMove.new.movement(["a", 1], ["a", 2], @w_p)).to eq("LEGAL")
-	end
+      it "changing the column is illegal" do
+        expect(Move.a(@w_p).from(["a", 1]).to(["b", 1])).to eq("ILLEGAL")
+      end
 
-	it "[a1 a4] is illegal" do
-		expect(ChessMove.new.movement(["a", 1], ["a", 3], @w_p)).to eq("ILLEGAL")
-	end
+      context "the white one:" do
+        it "moving forward is legal" do
+          expect(Move.a(@w_p).from(["a", 1]).to(["a", 2])).to eq("LEGAL")
+        end
 
-	it "[a1 b1] is illegal" do
-		expect(ChessMove.new.movement(["a", 1], ["b", 1], @w_p)).to eq("ILLEGAL")
-	end
-end
+        it "moving backward is illegal" do
+          expect(Move.a(@w_p).from(["a", 2]).to(["a", 1])).to eq("ILLEGAL")
+        end
+      end
 
-describe "given a one black pawn world" do
+      context "the black one:" do
+        it "moving forward is illegal" do
+          expect(Move.a(@b_p).from(["a", 1]).to(["a", 2])).to eq("ILLEGAL")
+        end
 
-	before :each do
-		@b_p=ChessMove.new.piece_team("bP")
-	end
+        it "moving backward is legal" do
+          expect(Move.a(@b_p).from(["a", 8]).to(["a", 7])).to eq("LEGAL")
+        end
+      end
+  end
 
-	it "[a1 a2] is illegal" do
-		expect(ChessMove.new.movement(["a", 1], ["a", 2], @b_p)).to eq("ILLEGAL")
-	end
+  context "A rock:" do
+    it "moving in diagonal is illegal" do
+      expect(Move.a(@b_r).from(["a", 2]).to(["b",8])).to eq("ILLEGAL")
+      expect(Move.a(@b_r).from(["a", 1]).to(["a", 8])).to eq("LEGAL")
+      expect(Move.a(@b_r).from(["a", 2]).to(["f", 2])).to eq("LEGAL")
+    end
+  end
 
-	it "[a8 a7] is legal" do
-		expect(ChessMove.new.movement(["a", 8], ["a", 7], @b_p)).to eq("LEGAL")
-	end
+  context "A bishop:" do
+    it "not moving in diagonal is illegal" do
+      expect(Move.a(@w_b).from(["a", 3]).to(["a", 2])).to eq("ILLEGAL")
+      expect(Move.a(@w_b).from(["a", 3]).to(["f", 3])).to eq("ILLEGAL")
+    end
 
-end
-
-describe "general movement rules applied to all pieces" do
-	it "must not go off the board horizontally" do
-		
-	end
+    it "moving in a delta different than one is illegal" do
+      expect(Move.a(@w_b).from(["a", 2]).to(["b", 5])).to eq("ILLEGAL")
+    end
+  end
 end

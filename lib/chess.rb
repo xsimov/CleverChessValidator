@@ -1,9 +1,11 @@
 require 'pry'
 
 RULES = {
-  p: [Proc.new { |orig, dest| orig[0] != dest[0] }, Proc.new { |orig, dest| dest[1] - orig[1] != 1 }],
+  p: [Proc.new { |orig, dest| orig[0] != dest[0] },
+      Proc.new { |orig, dest| dest[1] - orig[1] != 1 }],
   r: [Proc.new { |orig, dest| orig[0] != dest[0] && orig[1] != dest[1] }],
-  b: [Proc.new { |orig, dest| orig[0] == dest[0] || orig[1] == dest[1] }],
+  b: [Proc.new { |orig, dest| orig[0] == dest[0] || orig[1] == dest[1] },
+      Proc.new { |orig, dest| (orig[0].ord - dest[0].ord).abs != (orig[1] - dest[1]).abs }],
 }
 
 class Move

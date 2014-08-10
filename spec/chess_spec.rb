@@ -58,4 +58,6 @@ describe "One piece on the board world: " do
       expect(Move.a(@w_b).from(["a", 2]).to(["b", 5])).to eq("ILLEGAL")
     end
   end
+
+  
 end

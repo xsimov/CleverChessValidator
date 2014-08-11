@@ -8,7 +8,7 @@ RULES = {
       Proc.new { |orig, dest| (orig[0].ord - dest[0].ord).abs != (orig[1] - dest[1]).abs }],
 }
 
-class Move
+module Move
   def self.execute_movement
     @piece.rules.each do |rule|
       return "ILLEGAL" if rule.call(@orig, @dest)

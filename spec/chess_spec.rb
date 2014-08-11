@@ -59,5 +59,4 @@ describe "One piece on the board world: " do
     end
   end
 
-  
 end

@@ -8,31 +8,27 @@ RULES = {
       Proc.new { |orig, dest| (orig[0].ord - dest[0].ord).abs != (orig[1] - dest[1]).abs }],
 }
 
-module Move
-  def self.execute_movement
-    @piece.rules.each do |rule|
+module Movable
+  def check_legality
+    self.rules.each do |rule|
       return "ILLEGAL" if rule.call(@orig, @dest)
     end
     return "LEGAL"
   end
 
-  def self.a(piece)
-    @piece = piece
-    self
-  end
-
-  def self.from(orig)
+  def from(orig)
     @orig = orig
     self
   end
 
-  def self.to(dest)
+  def to(dest)
     @dest = dest
-    self.exchange_positions if @piece.is_a_black_pawn?
-    self.execute_movement
+    exchange_positions if self.is_a_black_pawn?
+    self
   end
 
-  def self.exchange_positions
+  private
+  def exchange_positions
     new_origin = @dest
     @dest = @orig
     @orig = new_origin
@@ -40,6 +36,7 @@ module Move
 end
 
 class Piece
+  include Movable
   def initialize(piece_name)
     @name = piece_name
     @rules = RULES[piece_name[1].downcase.to_sym]
